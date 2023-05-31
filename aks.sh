@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+script_version="0.0.1"
+
 echo "|-------------------------------------------------------|"
 echo "|             _    _  ______                            |"
 echo "|            / \  | |/ / ___|                           |"
@@ -8,9 +10,10 @@ echo "|          / ___ \| . \ ___) |                          |"
 echo "|         /_/   \_\_|\_\____/                           |"
 echo "| Checking connectivity to required ports and addresses |"
 echo "|                                                       |"
+echo "| VERSION: $script_version                                        |"
+echo "|                                                       |"
 echo "| https://aka.ms/aks-required-ports-and-addresses       |"
 echo "|-------------------------------------------------------|"
-
 
 function show_help()
 {
@@ -29,7 +32,7 @@ function test_connection()
     local additional_switches="$3"
 
     echo ""
-    nc -zv -w 5 $additional_switches $address $port
+    nc -zv -w 15 $additional_switches $address $port
     nc_exit_code=$?
     if [ "$nc_exit_code" -ne 0 ]; then
         echo "Unable to connect to $address:$port"
@@ -37,7 +40,7 @@ function test_connection()
         failures=$((failures + 1)) 
     else
         echo "Connected to $address:$port"
-        summary="$summary\nOK    - $address:$port"
+        summary="$summary\nOK - $address:$port"
     fi
     connectivity_tests=$((connectivity_tests + 1))
 }
@@ -116,13 +119,25 @@ if [ "$failures" -ne 0 ]; then
     echo ""
     echo "$failures out of $connectivity_tests connectivity checks failed."
     echo ""
+    echo "IMPORTANT NOTE: These connectivity checks *DO NOT VALIDATE* all the connectivity requirements for AKS."
+    echo ""
     echo "Please validate the failed connections and see if you need to open the ports and addresses documented here:"
     echo ""
     echo "https://aka.ms/aks-required-ports-and-addresses"
+    echo ""
+    echo "VERSION: $script_version"
     echo ""
     exit 1
 fi
 
 echo "All $connectivity_tests connectivity checks passed."
+echo ""
+echo "IMPORTANT NOTE: These connectivity checks *DO NOT VALIDATE* all the connectivity requirements for AKS."
+echo ""
+echo "Please read the documentation to understand all the connectivity requirements for AKS:"
+echo ""
+echo "https://aka.ms/aks-required-ports-and-addresses"
+echo ""
+echo "VERSION: 0.0.1"
 echo ""
 exit 0
