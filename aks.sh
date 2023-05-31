@@ -11,9 +11,16 @@ echo "|                                                       |"
 echo "| https://aka.ms/aks-required-ports-and-addresses       |"
 echo "|-------------------------------------------------------|"
 
-region="northeurope"
-summary=""
-failures=0
+
+function show_help()
+{
+    echo ""
+    echo "Usage: $0 [region]"
+    echo ""
+    echo "Arguments:"
+    echo "  region: The region to test connectivity to e.g, northeurope."
+    echo ""
+}
 
 function test_connection()
 {
@@ -33,6 +40,17 @@ function test_connection()
         summary="$summary\nOK    - $address:$port"
     fi
 }
+
+if [  -z "$1"  ]; then
+    show_help
+    exit 1
+fi
+
+region="$1"
+summary=""
+failures=0
+
+echo "Testing region $region"
 
 test_connection mcr.microsoft.com 443
 test_connection $region.data.mcr.microsoft.com 443
