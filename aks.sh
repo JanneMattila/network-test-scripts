@@ -29,7 +29,7 @@ function test_connection()
     local additional_switches="$3"
 
     echo ""
-    nc -zv -w 3 $additional_switches $address $port
+    nc -zv -w 5 $additional_switches $address $port
     nc_exit_code=$?
     if [ "$nc_exit_code" -ne 0 ]; then
         echo "Unable to connect to $address:$port"
@@ -39,6 +39,7 @@ function test_connection()
         echo "Connected to $address:$port"
         summary="$summary\nOK    - $address:$port"
     fi
+    connectivity_tests=$((connectivity_tests + 1))
 }
 
 if [  -z "$1"  ]; then
@@ -47,22 +48,57 @@ if [  -z "$1"  ]; then
 fi
 
 region="$1"
+dns_server="$2"
 summary=""
 failures=0
+connectivity_tests=0
 
 echo "Testing region $region"
-
+echo ""
+echo "Test Basic AKS cluster requirements:"
 test_connection mcr.microsoft.com 443
 test_connection $region.data.mcr.microsoft.com 443
+test_connection $region.monitoring.azure.com 443
 test_connection management.azure.com 443
 test_connection packages.microsoft.com 443
+test_connection acs-mirror.azureedge.net 443
+test_connection login.microsoft.com 443
+# test_connection vault.azure.net 443
+test_connection dc.services.visualstudio.com 443
+test_connection ntp.ubuntu.com 123 -u
+
+if [ ! -z "$dns_server" ]; then
+    test_connection $dns_server 53 -u
+fi
+
+echo ""
+echo "Test OS AKS cluster requirements:"
 test_connection esm.ubuntu.com 443
+test_connection motd.ubuntu.com 443
 test_connection security.ubuntu.com 80
 test_connection azure.archive.ubuntu.com 80
 test_connection changelogs.ubuntu.com 80
-test_connection login.microsoft.com 443
-test_connection ntp.ubuntu.com 123 -u
-test_connection 1.1.1.1 53 -u
+echo ""
+echo "Test Cluster extensions AKS cluster requirements:"
+test_connection $region.dp.kubernetesconfiguration.azure.com 443
+test_connection arcmktplaceprod.azurecr.io 443
+test_connection marketplaceapi.microsoft.com 443
+echo ""
+echo "Test Azure Policy AKS cluster requirements:"
+test_connection data.policy.core.windows.net 443
+test_connection store.policy.core.windows.net 443
+echo ""
+echo "Test GPU enabled AKS cluster requirements:"
+test_connection nvidia.github.io 443
+test_connection us.download.nvidia.com 443
+test_connection download.docker.com 443
+echo ""
+echo "Test Windows Server based node pools requirements:"
+test_connection onegetcdn.azureedge.net 443
+test_connection go.microsoft.com 443
+test_connection www.msftconnecttest.com 443
+test_connection ctldl.windowsupdate.com 80
+# test_connection $region.mp.microsoft.com 443
 
 echo ""
 echo "|-----------------------------------------------------|"
@@ -78,15 +114,15 @@ echo ""
 
 if [ "$failures" -ne 0 ]; then
     echo ""
-    echo "$failures connectivity checks failed."
+    echo "$failures out of $connectivity_tests connectivity checks failed."
     echo ""
-    echo "You *NEED* to open the ports and addresses documented here:"
+    echo "Please validate the failed connections and see if you need to open the ports and addresses documented here:"
     echo ""
     echo "https://aka.ms/aks-required-ports-and-addresses"
     echo ""
     exit 1
 fi
 
-echo "All connectivity checks passed."
+echo "All $connectivity_tests connectivity checks passed."
 echo ""
 exit 0
