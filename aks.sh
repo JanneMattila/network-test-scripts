@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-script_version="0.0.1"
+script_version="0.0.2"
 
 echo "|-------------------------------------------------------|"
 echo "|             _    _  ______                            |"
@@ -125,6 +125,7 @@ if [ "$failures" -ne 0 ]; then
     echo ""
     echo "https://aka.ms/aks-required-ports-and-addresses"
     echo ""
+    echo "REGION: $region"
     echo "VERSION: $script_version"
     echo ""
     exit 1
@@ -138,6 +139,7 @@ echo "Please read the documentation to understand all the connectivity requireme
 echo ""
 echo "https://aka.ms/aks-required-ports-and-addresses"
 echo ""
-echo "VERSION: 0.0.1"
+echo "REGION: $region"
+echo "VERSION: $script_version"
 echo ""
 exit 0
