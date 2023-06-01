@@ -10,16 +10,16 @@ the networking requirements of different Azure services.
 
 ## Azure Kubernetes Service (AKS)
 
-Test network connectivity requirements for region `northeurope`:
+Test network connectivity requirements for region `westeurope`:
 
 ```bash
-curl -L https://raw.githubusercontent.com/JanneMattila/network-test-scripts/main/aks.sh | bash -s -- northeurope
+curl -L https://raw.githubusercontent.com/JanneMattila/network-test-scripts/main/aks.sh | bash -s -- westeurope
 ```
 
 Additionally you can test custom DNS access e.g., 1.1.1.1 (Cloudflare DNS):
 
 ```bash
-curl -L https://raw.githubusercontent.com/JanneMattila/network-test-scripts/main/aks.sh | bash -s -- northeurope 1.1.1.1
+curl -L https://raw.githubusercontent.com/JanneMattila/network-test-scripts/main/aks.sh | bash -s -- westeurope 1.1.1.1
 ```
 
 Here is example output:
