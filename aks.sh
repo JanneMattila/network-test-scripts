@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-script_version="0.0.2"
+script_version="0.0.3"
 
 echo "|-------------------------------------------------------|"
 echo "|             _    _  ______                            |"
@@ -14,6 +14,18 @@ echo "| VERSION: $script_version                                        |"
 echo "|                                                       |"
 echo "| https://aka.ms/aks-required-ports-and-addresses       |"
 echo "|-------------------------------------------------------|"
+
+function show_end()
+{
+    echo ""
+    echo "https://aka.ms/aks-required-ports-and-addresses"
+    echo ""
+    echo "AZURE REGION TESTED: $region"
+    echo ""
+    echo "SCRIPT VERSION: $script_version"
+    echo "SCRIPT LOCATION: https://raw.githubusercontent.com/JanneMattila/network-test-scripts/main/aks.sh"
+    echo ""
+}
 
 function show_help()
 {
@@ -122,12 +134,7 @@ if [ "$failures" -ne 0 ]; then
     echo "IMPORTANT NOTE: These connectivity checks *DO NOT VALIDATE* all the connectivity requirements for AKS."
     echo ""
     echo "Please validate the failed connections and see if you need to open the ports and addresses documented here:"
-    echo ""
-    echo "https://aka.ms/aks-required-ports-and-addresses"
-    echo ""
-    echo "REGION: $region"
-    echo "VERSION: $script_version"
-    echo ""
+    show_end
     exit 1
 fi
 
@@ -136,10 +143,5 @@ echo ""
 echo "IMPORTANT NOTE: These connectivity checks *DO NOT VALIDATE* all the connectivity requirements for AKS."
 echo ""
 echo "Please read the documentation to understand all the connectivity requirements for AKS:"
-echo ""
-echo "https://aka.ms/aks-required-ports-and-addresses"
-echo ""
-echo "REGION: $region"
-echo "VERSION: $script_version"
-echo ""
+show_end
 exit 0
