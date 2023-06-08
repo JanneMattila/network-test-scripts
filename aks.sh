@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-script_version="0.0.3"
+script_version="0.0.4"
 
 echo "|-------------------------------------------------------|"
 echo "|             _    _  ______                            |"
@@ -23,7 +23,7 @@ function show_end()
     echo "AZURE REGION TESTED: $region"
     echo ""
     echo "SCRIPT VERSION: $script_version"
-    echo "SCRIPT LOCATION: https://raw.githubusercontent.com/JanneMattila/network-test-scripts/main/aks.sh"
+    echo "SCRIPT LOCATION: https://github.com/JanneMattila/network-test-scripts/blob/main/aks.sh"
     echo ""
 }
 
